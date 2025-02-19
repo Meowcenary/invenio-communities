@@ -635,7 +635,7 @@ def test_parent_create(community_service, comm):
     community_service.update(
         identity=system_identity,
         id_=str(parent.id),
-        data={**parent.data, "children": {"allow": True}},
+        data={**parent.data, "children": {"allow": True}, "access": {"owned_by": [{"user": "123"}]}}
     )
     child = community_service.create(
         identity=system_identity,

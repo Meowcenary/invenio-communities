@@ -189,6 +189,17 @@ def test_post_schema_validation(
     _assert_error_fields_response(set(["access.visibility"]), res)
     _assert_error_messages_response(1, res)
 
+    # this test as is will pass
+    # fails commented out line because error message is "Invalid Field" (or something like
+    # that)
+    data = copy.deepcopy(minimal_community)
+    data["access"]["owned_by"] = [{"user": 1}, {"user": 2}]
+    res = client.post("/communities", headers=headers, json=data)
+    assert res.status_code == 400
+    assert res.json["message"] == "A validation error occurred."
+    _assert_error_fields_response(set(["access.owned_by"]), res)
+    # _assert_error_messages_response(1, res)
+
     # Delete the community
     res = client.delete(f'/communities/{created_community["id"]}', headers=headers)
     assert res.status_code == 204
